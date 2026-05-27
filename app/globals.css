@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Paleta institucional Municipalidad SMT */
+    --smt-blue: 218 84% 48%;        /* Azul SMT */
+    --smt-blue-dark: 220 70% 18%;   /* Sidebar / headers */
+    --smt-sky: 200 88% 56%;         /* Celeste */
+    --smt-yellow: 48 100% 52%;      /* Sol */
+
+    --background: 210 30% 98%;
+    --foreground: 220 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 12%;
+    --primary: 218 84% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 25% 95%;
+    --secondary-foreground: 220 30% 18%;
+    --muted: 215 25% 96%;
+    --muted-foreground: 220 12% 46%;
+    --accent: 215 30% 94%;
+    --accent-foreground: 220 30% 18%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 20% 90%;
+    --input: 215 20% 88%;
+    --ring: 218 84% 48%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+}
+
+/* fondo institucional sutil con gradient muy tenue */
+.bg-app {
+  background:
+    radial-gradient(1200px 600px at -10% -20%, hsl(var(--smt-blue) / 0.06), transparent 60%),
+    radial-gradient(900px 500px at 110% 0%, hsl(var(--smt-sky) / 0.05), transparent 60%),
+    hsl(var(--background));
+}
+
+.bg-smt-blue { background-color: hsl(var(--smt-blue)); }
+.bg-smt-blue-dark { background-color: hsl(var(--smt-blue-dark)); }
+.text-smt-yellow { color: hsl(var(--smt-yellow)); }
