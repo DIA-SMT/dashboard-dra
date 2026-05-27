@@ -18,21 +18,25 @@ export default function NuevaSolicitudPage() {
   const [estado, setEstado] = React.useState<EstadoSolicitud>("pendiente");
   const [submitting, setSubmitting] = React.useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
     const fd = new FormData(e.currentTarget);
-    agregar({
-      solicitante: String(fd.get("solicitante") ?? ""),
-      motivo: String(fd.get("motivo") ?? ""),
-      fecha: String(fd.get("fecha") ?? ""),
-      hora: String(fd.get("hora") ?? "") || undefined,
-      estado,
-      contacto: String(fd.get("contacto") ?? "") || undefined,
-      institucion: String(fd.get("institucion") ?? "") || undefined,
-      observaciones: String(fd.get("observaciones") ?? "") || undefined,
-    });
-    router.push("/solicitudes");
+    try {
+      await agregar({
+        solicitante: String(fd.get("solicitante") ?? ""),
+        motivo: String(fd.get("motivo") ?? ""),
+        fecha: String(fd.get("fecha") ?? ""),
+        hora: String(fd.get("hora") ?? "") || undefined,
+        estado,
+        contacto: String(fd.get("contacto") ?? "") || undefined,
+        institucion: String(fd.get("institucion") ?? "") || undefined,
+        observaciones: String(fd.get("observaciones") ?? "") || undefined,
+      });
+      router.push("/solicitudes");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
