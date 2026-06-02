@@ -74,7 +74,7 @@ export function Sidebar() {
           <p className="text-[10px] uppercase tracking-wider text-white/50">Despacho</p>
           <p className="text-sm text-white/90 font-medium leading-tight mt-0.5">Intendencia Municipal</p>
         </div>
-        <p className="mt-4 text-[10px] text-white/40">MVP · v0.1</p>
+        <p className="mt-4 text-[10px] text-white/40">MVP · v0.2</p>
       </div>
     </aside>
   );
