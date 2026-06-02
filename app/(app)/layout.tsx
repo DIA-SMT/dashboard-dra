@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/sidebar";
 import { MobileNav } from "@/components/mobile-nav";
 import { Topbar } from "@/components/topbar";
 import { ErrorBanner } from "@/components/error-banner";
+import { AsistenteAgenda } from "@/components/asistente-agenda";
 import { StoreProvider } from "@/lib/store";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
       <MobileNav />
+      <AsistenteAgenda />
     </StoreProvider>
   );
 }
