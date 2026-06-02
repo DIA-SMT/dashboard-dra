@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EstadoBadge } from "@/components/estado-badge";
 import { DetalleSolicitud } from "@/components/detalle-solicitud";
+import { CopiarLinkPublico } from "@/components/copiar-link-publico";
 import { useStore } from "@/lib/store";
 import { Solicitud } from "@/lib/types";
 import { CalendarDays, Clock, AlertCircle, PlusCircle, ChevronRight, ClipboardList, ArrowRight } from "lucide-react";
@@ -41,9 +42,16 @@ export default function DashboardPage() {
               Visualizá y gestioná las solicitudes de audiencias y reuniones del despacho.
             </p>
           </div>
-          <Button asChild size="lg" variant="secondary" className="bg-white text-[hsl(var(--smt-blue-dark))] hover:bg-white/90 shadow-sm">
-            <Link href="/nueva-solicitud"><PlusCircle className="h-5 w-5" /> Nueva solicitud</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <CopiarLinkPublico
+              variant="secondary"
+              size="lg"
+              className="bg-white/15 text-white hover:bg-white/25 border border-white/20"
+            />
+            <Button asChild size="lg" variant="secondary" className="bg-white text-[hsl(var(--smt-blue-dark))] hover:bg-white/90 shadow-sm">
+              <Link href="/nueva-solicitud"><PlusCircle className="h-5 w-5" /> Nueva solicitud</Link>
+            </Button>
+          </div>
         </div>
       </section>
 

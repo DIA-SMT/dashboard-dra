@@ -4,6 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, CalendarDays, ClipboardList, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CopiarLinkPublico } from "@/components/copiar-link-publico";
 
 const items = [
   { href: "/", label: "Inicio", icon: LayoutDashboard },
@@ -61,7 +62,15 @@ export function Sidebar() {
       </nav>
 
       <div className="relative px-6 py-5 mt-2">
-        <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2.5">
+        <CopiarLinkPublico
+          variant="secondary"
+          size="default"
+          className="w-full bg-white/10 text-white hover:bg-white/20 border border-white/15"
+        />
+        <p className="mt-2 text-[10px] text-white/45 leading-snug">
+          Compartí este link para que soliciten reuniones desde afuera.
+        </p>
+        <div className="mt-4 rounded-lg bg-white/5 border border-white/10 px-3 py-2.5">
           <p className="text-[10px] uppercase tracking-wider text-white/50">Despacho</p>
           <p className="text-sm text-white/90 font-medium leading-tight mt-0.5">Intendencia Municipal</p>
         </div>

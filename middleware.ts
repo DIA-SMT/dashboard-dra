@@ -25,8 +25,10 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname === "/login";
+  // Rutas públicas (no requieren sesión): formulario de solicitud ciudadana.
+  const isPublicRoute = pathname === "/solicitar" || pathname.startsWith("/solicitar/");
 
-  if (!user && !isAuthRoute) {
+  if (!user && !isAuthRoute && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
