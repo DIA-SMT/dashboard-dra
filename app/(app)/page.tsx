@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EstadoBadge } from "@/components/estado-badge";
 import { DetalleSolicitud } from "@/components/detalle-solicitud";
-import { CopiarLinkPublico } from "@/components/copiar-link-publico";
 import { useStore } from "@/lib/store";
 import { Solicitud } from "@/lib/types";
 import { CalendarDays, Clock, AlertCircle, PlusCircle, ChevronRight, ClipboardList, ArrowRight } from "lucide-react";
@@ -42,16 +41,9 @@ export default function DashboardPage() {
               Visualizá y gestioná las solicitudes de audiencias y reuniones del despacho.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <CopiarLinkPublico
-              variant="secondary"
-              size="lg"
-              className="bg-white/15 text-white hover:bg-white/25 border border-white/20"
-            />
-            <Button asChild size="lg" variant="secondary" className="bg-white text-[hsl(var(--smt-blue-dark))] hover:bg-white/90 shadow-sm">
-              <Link href="/nueva-solicitud"><PlusCircle className="h-5 w-5" /> Nueva solicitud</Link>
-            </Button>
-          </div>
+          <Button asChild size="lg" variant="secondary" className="bg-white text-[hsl(var(--smt-blue-dark))] hover:bg-white/90 shadow-sm">
+            <Link href="/nueva-solicitud"><PlusCircle className="h-5 w-5" /> Nueva solicitud</Link>
+          </Button>
         </div>
       </section>
 
@@ -61,22 +53,43 @@ export default function DashboardPage() {
           icon={Clock}
           label="Reuniones de hoy"
           value={reunionesHoy.length}
-          accent="from-[hsl(var(--smt-blue))]/10 to-[hsl(var(--smt-blue))]/5"
-          iconClass="bg-[hsl(var(--smt-blue))]/10 text-[hsl(var(--smt-blue))]"
+          descripcion="Agendadas para el día de hoy"
+          href="/calendario"
+          theme={{
+            border: "border-l-[hsl(var(--smt-blue))]",
+            bg: "bg-[hsl(var(--smt-blue))]/[0.05]",
+            iconBg: "bg-[hsl(var(--smt-blue))]/10",
+            iconText: "text-[hsl(var(--smt-blue))]",
+            value: "text-[hsl(var(--smt-blue))]",
+          }}
         />
         <StatCard
           icon={CalendarDays}
           label="Próximas reuniones"
           value={proximas.length}
-          accent="from-[hsl(var(--smt-sky))]/10 to-[hsl(var(--smt-sky))]/5"
-          iconClass="bg-[hsl(var(--smt-sky))]/15 text-[hsl(var(--smt-sky))]"
+          descripcion="Agendadas para los próximos días"
+          href="/calendario"
+          theme={{
+            border: "border-l-sky-400",
+            bg: "bg-sky-50/60",
+            iconBg: "bg-sky-100",
+            iconText: "text-sky-600",
+            value: "text-sky-600",
+          }}
         />
         <StatCard
           icon={AlertCircle}
           label="Solicitudes pendientes"
           value={pendientes.length}
-          accent="from-[hsl(var(--smt-yellow))]/15 to-[hsl(var(--smt-yellow))]/5"
-          iconClass="bg-[hsl(var(--smt-yellow))]/20 text-amber-700"
+          descripcion="Esperan respuesta del despacho"
+          href="/solicitudes?estado=pendiente"
+          theme={{
+            border: "border-l-amber-400",
+            bg: "bg-amber-50/70",
+            iconBg: "bg-amber-100",
+            iconText: "text-amber-700",
+            value: "text-amber-700",
+          }}
         />
       </section>
 
@@ -86,7 +99,10 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Agenda</p>
-              <CardTitle className="mt-0.5">Hoy</CardTitle>
+              <CardTitle className="mt-0.5 flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--smt-blue))]" />
+                Hoy
+              </CardTitle>
             </div>
             <Link href="/calendario" className="text-sm text-[hsl(var(--smt-blue))] hover:underline inline-flex items-center gap-1">
               Ver calendario <ArrowRight className="h-3.5 w-3.5" />
@@ -109,7 +125,10 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Próximos días</p>
-              <CardTitle className="mt-0.5">Próximas reuniones</CardTitle>
+              <CardTitle className="mt-0.5 flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
+                Próximas reuniones
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -129,7 +148,10 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Por responder</p>
-              <CardTitle className="mt-0.5">Solicitudes pendientes</CardTitle>
+              <CardTitle className="mt-0.5 flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+                Solicitudes pendientes
+              </CardTitle>
             </div>
             <Link href="/solicitudes?estado=pendiente" className="text-sm text-[hsl(var(--smt-blue))] hover:underline inline-flex items-center gap-1">
               Ver todas <ArrowRight className="h-3.5 w-3.5" />
@@ -152,21 +174,30 @@ export default function DashboardPage() {
   );
 }
 
-function StatCard({ icon: Icon, label, value, accent, iconClass }: {
-  icon: any; label: string; value: number; accent: string; iconClass: string;
+function StatCard({ icon: Icon, label, value, descripcion, href, theme }: {
+  icon: any; label: string; value: number; descripcion: string; href: string;
+  theme: { border: string; bg: string; iconBg: string; iconText: string; value: string };
 }) {
   return (
-    <Card className={`border-border/70 bg-gradient-to-br ${accent}`}>
-      <CardContent className="pt-6 flex items-center gap-4">
-        <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${iconClass}`}>
-          <Icon className="h-6 w-6" />
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
-          <p className="text-3xl font-semibold leading-none mt-1.5 tracking-tight">{value}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <Link href={href} className="group block">
+      <Card className={`border-border/70 border-l-4 ${theme.border} ${theme.bg} transition-all hover:shadow-md hover:-translate-y-0.5`}>
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-4">
+            <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${theme.iconBg} ${theme.iconText}`}>
+              <Icon className="h-6 w-6" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
+              <p className={`text-3xl font-semibold leading-none mt-1.5 tracking-tight ${theme.value}`}>{value}</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+            {descripcion}
+            <ArrowRight className="h-3 w-3 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
 
