@@ -7,6 +7,7 @@ import { EstadoBadge } from "@/components/estado-badge";
 import { DetalleSolicitud } from "@/components/detalle-solicitud";
 import { useStore } from "@/lib/store";
 import { Solicitud } from "@/lib/types";
+import { cn, esReciente } from "@/lib/utils";
 import { CalendarDays, Clock, AlertCircle, PlusCircle, ChevronRight, ClipboardList, ArrowRight } from "lucide-react";
 
 function todayISO() { return new Date().toISOString().slice(0, 10); }
@@ -24,6 +25,7 @@ export default function DashboardPage() {
     .sort((a, b) => a.fecha.localeCompare(b.fecha) || (a.hora ?? "").localeCompare(b.hora ?? ""))
     .slice(0, 5);
   const pendientes = solicitudes.filter((s) => s.estado === "pendiente");
+  const pendientesNuevas = pendientes.filter((s) => esReciente(s.creadaEn)).length;
 
   return (
     <div className="space-y-8">
@@ -151,6 +153,12 @@ export default function DashboardPage() {
               <CardTitle className="mt-0.5 flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                 Solicitudes pendientes
+                {pendientesNuevas > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 text-[11px] font-semibold">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    {pendientesNuevas} {pendientesNuevas === 1 ? "nueva" : "nuevas"}
+                  </span>
+                )}
               </CardTitle>
             </div>
             <Link href="/solicitudes?estado=pendiente" className="text-sm text-[hsl(var(--smt-blue))] hover:underline inline-flex items-center gap-1">
@@ -204,9 +212,16 @@ function StatCard({ icon: Icon, label, value, descripcion, href, theme }: {
 function ItemFila({ solicitud, onClick, mostrarHora, mostrarFecha }: {
   solicitud: Solicitud; onClick: () => void; mostrarHora?: boolean; mostrarFecha?: boolean;
 }) {
+  const nueva = solicitud.estado === "pendiente" && esReciente(solicitud.creadaEn);
   return (
     <li>
-      <button onClick={onClick} className="w-full flex items-center gap-4 py-3.5 text-left hover:bg-accent/40 -mx-2 px-2 rounded-lg transition-colors">
+      <button
+        onClick={onClick}
+        className={cn(
+          "w-full flex items-center gap-4 py-3.5 text-left -mx-2 px-2 rounded-lg transition-colors",
+          nueva ? "bg-amber-50 hover:bg-amber-100/70 border-l-2 border-amber-400" : "hover:bg-accent/40"
+        )}
+      >
         {mostrarHora && solicitud.hora && (
           <div className="text-sm font-semibold w-14 text-[hsl(var(--smt-blue))] tabular-nums">{solicitud.hora}</div>
         )}
@@ -217,7 +232,14 @@ function ItemFila({ solicitud, onClick, mostrarHora, mostrarFecha }: {
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <p className="font-medium truncate text-foreground">{solicitud.solicitante}</p>
+          <p className="font-medium truncate text-foreground flex items-center gap-2">
+            <span className="truncate">{solicitud.solicitante}</span>
+            {nueva && (
+              <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+                Nuevo
+              </span>
+            )}
+          </p>
           <p className="text-sm text-muted-foreground truncate">{solicitud.motivo}</p>
         </div>
         <EstadoBadge estado={solicitud.estado} />

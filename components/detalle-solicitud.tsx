@@ -5,15 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { EstadoBadge } from "./estado-badge";
-import { ESTADOS, EstadoSolicitud, Solicitud } from "@/lib/types";
+import { ESTADOS, EstadoSolicitud, FechaPropuesta, Solicitud } from "@/lib/types";
 import { useStore } from "@/lib/store";
-import { Calendar, Mail, Building, FileText, Check, AlertCircle } from "lucide-react";
+import { Calendar, CalendarClock, Mail, Building, FileText, Check, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function fmtFecha(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y, m - 1, d).toLocaleDateString("es-AR", {
     weekday: "long", day: "2-digit", month: "long", year: "numeric",
+  });
+}
+
+function fmtFechaCorta(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("es-AR", {
+    weekday: "short", day: "2-digit", month: "short",
   });
 }
 
@@ -67,6 +74,22 @@ export function DetalleSolicitud({
     triggerFlash();
   };
 
+  const confirmarFecha = (f: FechaPropuesta) => {
+    const patch: Partial<Solicitud> = { fecha: f.fecha, hora: f.hora || undefined };
+    if (actual.estado === "pendiente") patch.estado = "agendada";
+    actualizar(actual.id, patch);
+    triggerFlash();
+  };
+
+  // Mientras está pendiente no hay ninguna fecha confirmada: el despacho elige una al llamar.
+  const esConfirmada = (f: FechaPropuesta) =>
+    actual.estado !== "pendiente" &&
+    f.fecha === actual.fecha &&
+    (f.hora || undefined) === (actual.hora || undefined);
+
+  const propuestas = actual.fechasPropuestas ?? [];
+  const ocultarFechaPrincipal = actual.estado === "pendiente" && propuestas.length > 1;
+
   const motivoCambio = (motivoNR.trim() || "") !== (actual.motivoNoRealizada ?? "");
 
   return (
@@ -82,13 +105,58 @@ export function DetalleSolicitud({
             <FileText className="h-4 w-4 mt-0.5 text-muted-foreground" />
             <div><p className="text-xs text-muted-foreground">Motivo</p><p>{actual.motivo}</p></div>
           </div>
-          <div className="flex items-start gap-3">
-            <Calendar className="h-4 w-4 mt-0.5 text-muted-foreground" />
-            <div>
-              <p className="text-xs text-muted-foreground">Fecha</p>
-              <p className="capitalize">{fmtFecha(actual.fecha)}{actual.hora ? ` · ${actual.hora} hs` : ""}</p>
+          {!ocultarFechaPrincipal && (
+            <div className="flex items-start gap-3">
+              <Calendar className="h-4 w-4 mt-0.5 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  {actual.estado === "pendiente" ? "Fecha propuesta" : "Fecha confirmada"}
+                </p>
+                <p className="capitalize">{fmtFecha(actual.fecha)}{actual.hora ? ` · ${actual.hora} hs` : ""}</p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {propuestas.length > 1 && (
+            <div className="flex items-start gap-3">
+              <CalendarClock className="h-4 w-4 mt-0.5 text-muted-foreground" />
+              <div className="flex-1">
+                <p className="text-xs text-muted-foreground mb-1.5">
+                  {actual.estado === "pendiente"
+                    ? "Fechas propuestas — confirmá una cuando llames al solicitante"
+                    : "Opciones propuestas por el solicitante"}
+                </p>
+                <div className="space-y-1.5">
+                  {propuestas.map((f, i) => {
+                    const activa = esConfirmada(f);
+                    return (
+                      <div
+                        key={i}
+                        className={cn(
+                          "flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5",
+                          activa ? "border-sky-300 bg-sky-50" : "border-border/70"
+                        )}
+                      >
+                        <span className="text-sm capitalize">
+                          {fmtFechaCorta(f.fecha)}
+                          {f.hora ? ` · ${f.hora} hs` : ""}
+                        </span>
+                        {activa ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-sky-700">
+                            <Check className="h-3.5 w-3.5" /> Confirmada
+                          </span>
+                        ) : (
+                          <Button size="sm" variant="outline" onClick={() => confirmarFecha(f)}>
+                            Confirmar
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
           {actual.contacto && (
             <div className="flex items-start gap-3">
               <Mail className="h-4 w-4 mt-0.5 text-muted-foreground" />

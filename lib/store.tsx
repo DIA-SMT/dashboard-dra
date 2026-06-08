@@ -21,6 +21,9 @@ function fromRow(r: SolicitudRow): Solicitud {
     motivo: r.motivo,
     fecha: r.fecha,
     hora: r.hora ?? undefined,
+    fechasPropuestas: Array.isArray(r.fechas_propuestas)
+      ? r.fechas_propuestas.map((f) => ({ fecha: f.fecha, hora: f.hora ?? undefined }))
+      : undefined,
     estado: r.estado,
     contacto: r.contacto ?? undefined,
     institucion: r.institucion ?? undefined,
@@ -37,6 +40,8 @@ function toRow(s: Partial<Solicitud>): Record<string, unknown> {
   if (s.motivo !== undefined) out.motivo = s.motivo;
   if (s.fecha !== undefined) out.fecha = s.fecha;
   if (s.hora !== undefined) out.hora = s.hora ?? null;
+  if (s.fechasPropuestas !== undefined)
+    out.fechas_propuestas = (s.fechasPropuestas ?? []).map((f) => ({ fecha: f.fecha, hora: f.hora ?? null }));
   if (s.estado !== undefined) out.estado = s.estado;
   if (s.contacto !== undefined) out.contacto = s.contacto ?? null;
   if (s.institucion !== undefined) out.institucion = s.institucion ?? null;
@@ -56,8 +61,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const { data, error } = await supabase
       .from("solicitudes")
       .select("*")
-      .order("fecha", { ascending: false })
-      .order("hora", { ascending: true, nullsFirst: false });
+      .order("creada_en", { ascending: false });
     if (error) {
       setError(error.message);
       setLoading(false);

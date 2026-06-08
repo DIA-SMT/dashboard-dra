@@ -10,7 +10,17 @@ import { EstadoBadge } from "@/components/estado-badge";
 import { DetalleSolicitud } from "@/components/detalle-solicitud";
 import { useStore } from "@/lib/store";
 import { ESTADOS, EstadoSolicitud, Solicitud } from "@/lib/types";
+import { cn, esReciente } from "@/lib/utils";
 import { PlusCircle, Search, Pencil } from "lucide-react";
+
+function PillNueva() {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+      <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+      Nuevo
+    </span>
+  );
+}
 
 type FiltroEstado = EstadoSolicitud | "todos";
 
@@ -31,8 +41,9 @@ function Inner() {
         s.solicitante.toLowerCase().includes(term) ||
         s.motivo.toLowerCase().includes(term) ||
         (s.institucion ?? "").toLowerCase().includes(term)
-      )
-      .sort((a, b) => b.fecha.localeCompare(a.fecha));
+      );
+    // `solicitudes` ya viene del store ordenado por fecha de solicitud (más reciente primero).
+    // No reordenamos por fecha propuesta para respetar el orden en que llegaron los pedidos.
   }, [solicitudes, estado, q]);
 
   return (
@@ -80,10 +91,15 @@ function Inner() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {filtradas.map((s) => (
-                  <tr key={s.id} className="hover:bg-accent/40">
+                {filtradas.map((s) => {
+                  const nueva = s.estado === "pendiente" && esReciente(s.creadaEn);
+                  return (
+                  <tr key={s.id} className={cn("hover:bg-accent/40", nueva && "bg-amber-50/60")}>
                     <td className="px-4 py-3 font-medium">
-                      <div>{s.solicitante}</div>
+                      <div className="flex items-center gap-2">
+                        <span>{s.solicitante}</span>
+                        {nueva && <PillNueva />}
+                      </div>
                       {s.institucion && <div className="text-xs text-muted-foreground">{s.institucion}</div>}
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell max-w-xs">
@@ -100,7 +116,8 @@ function Inner() {
                       </Button>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           )}

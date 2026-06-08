@@ -1,11 +1,17 @@
 export type EstadoSolicitud = "pendiente" | "agendada" | "realizada" | "no_realizada";
 
+export interface FechaPropuesta {
+  fecha: string; // ISO date string
+  hora?: string; // HH:mm
+}
+
 export interface Solicitud {
   id: string;
   solicitante: string;
   motivo: string;
-  fecha: string; // ISO date string
+  fecha: string; // ISO date string — fecha confirmada / principal
   hora?: string; // HH:mm
+  fechasPropuestas?: FechaPropuesta[]; // opciones propuestas por el solicitante
   estado: EstadoSolicitud;
   contacto?: string;
   institucion?: string;

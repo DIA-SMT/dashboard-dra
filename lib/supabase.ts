@@ -18,6 +18,7 @@ export interface SolicitudRow {
   motivo: string;
   fecha: string;
   hora: string | null;
+  fechas_propuestas: { fecha: string; hora: string | null }[] | null;
   estado: "pendiente" | "agendada" | "realizada" | "no_realizada";
   contacto: string | null;
   institucion: string | null;
