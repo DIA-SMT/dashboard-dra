@@ -16,30 +16,31 @@ const items = [
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <aside className="hidden md:flex md:w-64 lg:w-72 shrink-0 flex-col bg-smt-blue-dark text-white relative overflow-hidden sticky top-0 h-screen">
-      {/* halo decorativo */}
-      <div className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 -left-10 h-48 w-48 rounded-full bg-white/5 blur-3xl" />
-
-      <div className="relative px-6 pt-8 pb-6">
+    <aside className="hidden md:flex md:w-56 shrink-0 flex-col bg-card border-r border-border sticky top-0 h-screen">
+      {/* Marca */}
+      <div className="flex items-center gap-2.5 px-4 pt-5 pb-4">
         <Image
-          src="/logos/Logo_SMT_neg_4.png"
+          src="/logos/logoMuni-sm.png"
           alt="Municipalidad de San Miguel de Tucumán"
-          width={200}
-          height={64}
-          className="h-12 w-auto"
+          width={36}
+          height={36}
+          className="h-9 w-9 shrink-0"
           priority
         />
-        <p className="mt-4 text-[11px] uppercase tracking-[0.18em] text-white/60">
-          Gestión de reuniones
-        </p>
+        <div className="min-w-0 leading-tight">
+          <p className="text-sm font-semibold text-foreground truncate">Intendencia</p>
+          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground truncate">
+            Gestión de reuniones
+          </p>
+        </div>
       </div>
 
-      <div className="relative px-4 py-2 mb-2">
-        <div className="h-px bg-white/10" />
+      <div className="px-3">
+        <div className="h-px bg-border" />
       </div>
 
-      <nav className="relative flex-1 px-3 space-y-1">
+      {/* Navegación */}
+      <nav className="flex-1 px-3 py-3 space-y-0.5">
         {items.map((it) => {
           const active = pathname === it.href;
           const Icon = it.icon;
@@ -48,33 +49,37 @@ export function Sidebar() {
               key={it.href}
               href={it.href}
               className={cn(
-                "group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
+                "group flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors",
                 active
-                  ? "bg-white text-[hsl(var(--smt-blue-dark))] shadow-sm"
-                  : "text-white/80 hover:text-white hover:bg-white/10"
+                  ? "bg-[hsl(var(--smt-blue))]/10 text-[hsl(var(--smt-blue))] font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
               )}
             >
-              <Icon className={cn("h-[18px] w-[18px]", active ? "" : "text-white/70 group-hover:text-white")} />
+              <Icon
+                className={cn(
+                  "h-[18px] w-[18px] shrink-0",
+                  active ? "text-[hsl(var(--smt-blue))]" : "text-muted-foreground group-hover:text-foreground"
+                )}
+              />
               {it.label}
             </Link>
           );
         })}
       </nav>
 
-      <div className="relative px-6 py-5 mt-2">
-        <CopiarLinkPublico
-          variant="secondary"
-          size="default"
-          className="w-full bg-white/10 text-white hover:bg-white/20 border border-white/15"
-        />
-        <p className="mt-2 text-[10px] text-white/45 leading-snug">
-          Compartí este link para que soliciten reuniones desde afuera.
-        </p>
-        <div className="mt-4 rounded-lg bg-white/5 border border-white/10 px-3 py-2.5">
-          <p className="text-[10px] uppercase tracking-wider text-white/50">Despacho</p>
-          <p className="text-sm text-white/90 font-medium leading-tight mt-0.5">Intendencia Municipal</p>
+      {/* Pie */}
+      <div className="px-3 py-4 space-y-3 border-t border-border">
+        <div>
+          <CopiarLinkPublico variant="outline" size="sm" className="w-full justify-center" />
+          <p className="mt-1.5 text-[10px] text-muted-foreground leading-snug">
+            Compartí este link para recibir solicitudes desde afuera.
+          </p>
         </div>
-        <p className="mt-4 text-[10px] text-white/40">MVP · v0.2</p>
+        <div className="rounded-lg bg-muted px-3 py-2">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Despacho</p>
+          <p className="text-sm text-foreground font-medium leading-tight mt-0.5">Intendencia Municipal</p>
+        </div>
+        <p className="text-[10px] text-muted-foreground/70">MVP · v0.2</p>
       </div>
     </aside>
   );

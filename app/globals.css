@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    /* Paleta institucional Municipalidad SMT */
-    --smt-blue: 218 84% 48%;        /* Azul SMT */
-    --smt-blue-dark: 220 70% 18%;   /* Sidebar / headers */
-    --smt-sky: 200 88% 56%;         /* Celeste */
-    --smt-yellow: 48 100% 52%;      /* Sol */
+    /* Paleta institucional — colores exactos del logo SMT */
+    --smt-blue: 216 100% 50%;       /* Azul cobalto (#0166ff) — pétalo izquierdo */
+    --smt-blue-dark: 218 80% 19%;   /* Azul profundo — sidebar / headers */
+    --smt-sky: 203 100% 59%;        /* Celeste (#2db0ff) — pétalo derecho */
+    --smt-yellow: 49 100% 50%;      /* Amarillo sol (#ffd400) */
 
-    --background: 210 30% 98%;
-    --foreground: 220 30% 12%;
+    --background: 212 38% 98%;
+    --foreground: 218 32% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 220 30% 12%;
-    --primary: 218 84% 42%;
+    --card-foreground: 218 32% 12%;
+    --primary: 216 100% 47%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 25% 95%;
-    --secondary-foreground: 220 30% 18%;
-    --muted: 215 25% 96%;
-    --muted-foreground: 220 12% 46%;
-    --accent: 215 30% 94%;
-    --accent-foreground: 220 30% 18%;
+    --secondary: 213 30% 95%;
+    --secondary-foreground: 218 32% 18%;
+    --muted: 213 30% 96%;
+    --muted-foreground: 216 14% 46%;
+    --accent: 205 70% 95%;
+    --accent-foreground: 216 60% 24%;
     --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 215 20% 90%;
-    --input: 215 20% 88%;
-    --ring: 218 84% 48%;
+    --border: 214 24% 90%;
+    --input: 214 24% 88%;
+    --ring: 216 100% 50%;
     --radius: 0.75rem;
   }
 }
@@ -35,21 +35,54 @@
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
+    font-weight: 400;
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1, h2, h3, h4 { letter-spacing: -0.02em; }
+  /* Jerarquía tipográfica Poppins */
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  h1 { letter-spacing: -0.03em; }
 }
 
-/* fondo institucional sutil con gradient muy tenue */
+/* fondo institucional sutil con los tres colores del logo */
 .bg-app {
   background:
-    radial-gradient(1200px 600px at -10% -20%, hsl(var(--smt-blue) / 0.06), transparent 60%),
-    radial-gradient(900px 500px at 110% 0%, hsl(var(--smt-sky) / 0.05), transparent 60%),
+    radial-gradient(1200px 600px at -10% -20%, hsl(var(--smt-blue) / 0.07), transparent 60%),
+    radial-gradient(900px 500px at 110% 0%, hsl(var(--smt-sky) / 0.06), transparent 60%),
+    radial-gradient(700px 500px at 50% 120%, hsl(var(--smt-yellow) / 0.04), transparent 60%),
     hsl(var(--background));
 }
 
+/* Fondo institucional con la foto del edificio municipal, sutil y desenfocada.
+   Se aplica como capa absoluta detrás del contenido (no sobre el sidebar). */
+.bg-muni-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      hsl(var(--background) / 0.94) 0%,
+      hsl(var(--background) / 0.88) 45%,
+      hsl(var(--smt-blue) / 0.12) 100%
+    ),
+    url("/logos/muni.jpg");
+  background-size: cover;
+  background-position: center 38%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: blur(2px);
+}
+
 .bg-smt-blue { background-color: hsl(var(--smt-blue)); }
+.bg-smt-sky { background-color: hsl(var(--smt-sky)); }
 .bg-smt-blue-dark { background-color: hsl(var(--smt-blue-dark)); }
+.text-smt-blue { color: hsl(var(--smt-blue)); }
+.text-smt-sky { color: hsl(var(--smt-sky)); }
 .text-smt-yellow { color: hsl(var(--smt-yellow)); }
+.border-smt-sky { border-color: hsl(var(--smt-sky)); }

@@ -29,9 +29,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Hero institucional */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(var(--smt-blue-dark))] via-[hsl(var(--smt-blue))] to-[hsl(var(--smt-sky))] text-white p-6 md:p-8 shadow-sm">
-        <div className="absolute -top-12 -right-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+      {/* Hero institucional — foto del municipio con velado cobalto */}
+      <section className="relative overflow-hidden rounded-2xl text-white p-6 md:p-8 shadow-sm">
+        {/* Foto del edificio municipal */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/logos/muni.jpg')" }}
+        />
+        {/* Velado degradado con los colores del logo (más oscuro a la izquierda para legibilidad) */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--smt-blue-dark))]/95 via-[hsl(var(--smt-blue))]/85 to-[hsl(var(--smt-sky))]/70"
+        />
         <div className="absolute -bottom-16 -left-10 h-56 w-56 rounded-full bg-[hsl(var(--smt-yellow))]/15 blur-3xl" />
         <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-5">
           <div>
@@ -72,11 +82,11 @@ export default function DashboardPage() {
           descripcion="Agendadas para los próximos días"
           href="/calendario"
           theme={{
-            border: "border-l-sky-400",
-            bg: "bg-sky-50/60",
-            iconBg: "bg-sky-100",
-            iconText: "text-sky-600",
-            value: "text-sky-600",
+            border: "border-l-[hsl(var(--smt-sky))]",
+            bg: "bg-[hsl(var(--smt-sky))]/[0.06]",
+            iconBg: "bg-[hsl(var(--smt-sky))]/15",
+            iconText: "text-[hsl(var(--smt-sky))]",
+            value: "text-[hsl(var(--smt-sky))]",
           }}
         />
         <StatCard
@@ -128,7 +138,7 @@ export default function DashboardPage() {
             <div>
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Próximos días</p>
               <CardTitle className="mt-0.5 flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-sky-400" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--smt-sky))]" />
                 Próximas reuniones
               </CardTitle>
             </div>

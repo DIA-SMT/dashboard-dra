@@ -10,7 +10,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <StoreProvider>
       <div className="flex min-h-screen">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="relative isolate flex-1 flex flex-col min-w-0">
+          <div aria-hidden className="bg-muni-layer" />
           <Topbar />
           <main className="flex-1 pb-20 md:pb-0">
             <div className="max-w-6xl mx-auto px-4 md:px-10 py-6 md:py-10">
