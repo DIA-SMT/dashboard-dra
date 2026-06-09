@@ -30,12 +30,12 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Encabezado compacto */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Panel de gestión</p>
           <h1 className="mt-0.5 text-2xl md:text-3xl font-semibold tracking-tight">Reuniones de la Intendencia</h1>
         </div>
-        <Button asChild size="lg">
+        <Button asChild size="lg" className="w-full sm:w-auto">
           <Link href="/nueva-solicitud"><PlusCircle className="h-5 w-5" /> Nueva solicitud</Link>
         </Button>
       </div>
@@ -49,10 +49,7 @@ export default function DashboardPage() {
           descripcion="Agendadas para el día de hoy"
           href="/calendario"
           theme={{
-            border: "border-l-[hsl(var(--smt-blue))]",
-            bg: "bg-[hsl(var(--smt-blue))]/[0.05]",
-            iconBg: "bg-[hsl(var(--smt-blue))]/10",
-            iconText: "text-[hsl(var(--smt-blue))]",
+            chip: "bg-[hsl(var(--smt-blue))]",
             value: "text-[hsl(var(--smt-blue))]",
           }}
         />
@@ -63,10 +60,7 @@ export default function DashboardPage() {
           descripcion="Agendadas para los próximos días"
           href="/calendario"
           theme={{
-            border: "border-l-[hsl(var(--smt-sky))]",
-            bg: "bg-[hsl(var(--smt-sky))]/[0.06]",
-            iconBg: "bg-[hsl(var(--smt-sky))]/15",
-            iconText: "text-[hsl(var(--smt-sky))]",
+            chip: "bg-[hsl(var(--smt-sky))]",
             value: "text-[hsl(var(--smt-sky))]",
           }}
         />
@@ -77,11 +71,8 @@ export default function DashboardPage() {
           descripcion="Esperan respuesta del despacho"
           href="/solicitudes?estado=pendiente"
           theme={{
-            border: "border-l-amber-400",
-            bg: "bg-amber-50/70",
-            iconBg: "bg-amber-100",
-            iconText: "text-amber-700",
-            value: "text-amber-700",
+            chip: "bg-amber-500",
+            value: "text-amber-600",
           }}
         />
       </section>
@@ -175,24 +166,25 @@ export default function DashboardPage() {
 
 function StatCard({ icon: Icon, label, value, descripcion, href, theme }: {
   icon: any; label: string; value: number; descripcion: string; href: string;
-  theme: { border: string; bg: string; iconBg: string; iconText: string; value: string };
+  theme: { chip: string; value: string };
 }) {
   return (
     <Link href={href} className="group block">
-      <Card className={`border-border/70 border-l-4 ${theme.border} ${theme.bg} transition-all hover:shadow-md hover:-translate-y-0.5`}>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-            <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${theme.iconBg} ${theme.iconText}`}>
-              <Icon className="h-6 w-6" />
-            </div>
+      <Card className="relative overflow-hidden border-border/70 transition-all hover:shadow-md hover:-translate-y-0.5">
+        {/* Marca de agua sutil del ícono */}
+        <Icon className={`pointer-events-none absolute -bottom-4 -right-3 h-24 w-24 ${theme.value} opacity-[0.05] transition-transform group-hover:scale-110`} />
+        <CardContent className="p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
-              <p className={`text-3xl font-semibold leading-none mt-1.5 tracking-tight ${theme.value}`}>{value}</p>
+              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
+              <p className={`mt-2 text-3xl sm:text-4xl font-bold leading-none tracking-tight tabular-nums ${theme.value}`}>{value}</p>
+            </div>
+            <div className={`h-10 w-10 sm:h-11 sm:w-11 shrink-0 rounded-xl flex items-center justify-center text-white shadow-sm ${theme.chip}`}>
+              <Icon className="h-5 w-5" />
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+          <p className="relative mt-4 pt-3 border-t border-border/60 text-xs text-muted-foreground">
             {descripcion}
-            <ArrowRight className="h-3 w-3 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
           </p>
         </CardContent>
       </Card>
@@ -209,7 +201,7 @@ function ItemFila({ solicitud, onClick, mostrarHora, mostrarFecha }: {
       <button
         onClick={onClick}
         className={cn(
-          "w-full flex items-center gap-4 py-3.5 text-left -mx-2 px-2 rounded-lg transition-colors",
+          "w-full flex items-center gap-3 sm:gap-4 py-3.5 text-left -mx-2 px-2 rounded-lg transition-colors",
           nueva ? "bg-amber-50 hover:bg-amber-100/70 border-l-2 border-amber-400" : "hover:bg-accent/40"
         )}
       >
@@ -234,7 +226,7 @@ function ItemFila({ solicitud, onClick, mostrarHora, mostrarFecha }: {
           <p className="text-sm text-muted-foreground truncate">{solicitud.motivo}</p>
         </div>
         <EstadoBadge estado={solicitud.estado} />
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        <ChevronRight className="hidden sm:block h-4 w-4 text-muted-foreground shrink-0" />
       </button>
     </li>
   );

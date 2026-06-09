@@ -111,8 +111,8 @@ function Inner() {
                     </td>
                     <td className="px-4 py-3"><EstadoBadge estado={s.estado} /></td>
                     <td className="px-4 py-3 text-right">
-                      <Button size="sm" variant="outline" onClick={() => setSel(s)}>
-                        <Pencil className="h-4 w-4" /> Editar
+                      <Button size="sm" variant="outline" onClick={() => setSel(s)} aria-label="Editar">
+                        <Pencil className="h-4 w-4" /> <span className="hidden sm:inline">Editar</span>
                       </Button>
                     </td>
                   </tr>

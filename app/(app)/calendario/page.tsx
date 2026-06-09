@@ -55,7 +55,7 @@ export default function CalendarioPage() {
           <Button variant="outline" size="icon" onClick={() => setCursor(new Date(year, month - 1, 1))}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="min-w-[200px] text-center font-semibold text-lg capitalize">
+          <div className="min-w-[120px] sm:min-w-[200px] text-center font-semibold text-base sm:text-lg capitalize">
             {MESES[month]} <span className="text-muted-foreground font-normal">{year}</span>
           </div>
           <Button variant="outline" size="icon" onClick={() => setCursor(new Date(year, month + 1, 1))}>
@@ -79,7 +79,7 @@ export default function CalendarioPage() {
               const colEnd = (i + 1) % 7 !== 0;
               const lastRow = i >= celdas.length - 7;
               if (!date) {
-                return <div key={i} className={cn("min-h-[110px] md:min-h-[128px] bg-muted/20", colEnd && "border-r", !lastRow && "border-b")} />;
+                return <div key={i} className={cn("min-h-[78px] sm:min-h-[110px] md:min-h-[128px] bg-muted/20", colEnd && "border-r", !lastRow && "border-b")} />;
               }
               const iso = toISO(date);
               const items = porFecha.get(iso) ?? [];
@@ -88,7 +88,7 @@ export default function CalendarioPage() {
                 <div
                   key={i}
                   className={cn(
-                    "min-h-[110px] md:min-h-[128px] p-2 flex flex-col gap-1 transition-colors",
+                    "min-h-[78px] sm:min-h-[110px] md:min-h-[128px] p-1.5 sm:p-2 flex flex-col gap-1 transition-colors",
                     isHoy && "bg-[hsl(var(--smt-blue))]/[0.04]",
                     colEnd && "border-r",
                     !lastRow && "border-b"
